@@ -1,0 +1,179 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+class Node{
+public:
+    Node(string &a){ //Constructor
+        ID = a;
+    }
+    void addadj(string &a, int b){ //Creates adjacency list
+        pair<string, int>p;
+        p.first = a;
+        p.second = b;
+        adj.push_back(p);
+    }
+    void setdistsrc(int x){ //Set shortest distance from src
+        distsrc = x;
+    }
+    string getID(){ //getter for ID
+        return ID;
+    }
+    int getdistsrc(){ //getter for distance
+        return distsrc;
+    }
+    bool operator < (Node b){ //overloaded operator for minheap
+        return distsrc < b.distsrc;
+    }
+    void setedist(int x){ //Getters and setters for even and odd mindist
+        edist = x;
+    }
+    void setodist(int x){
+        odist = x;
+    }
+    int getedist(){
+        return edist;
+    }
+    int getodist(){
+        return odist;
+    }
+    vector<pair<string, int>>adj;   
+private:
+    string ID;
+    int edist;
+    int odist;
+    int distsrc;
+};
+template <typename T>
+class Genpq{
+public:
+    Genpq(): length(0) {}
+
+    Genpq(vector<T> &d): data(d), length(d.size()){ //Minheap constructor
+        for(int i = length / 2 - 1; i >= 0; i--){
+            fix_down(i);
+        }
+    }
+
+    void push(T &t){ //push fn
+        length++;
+        if(length <= (int)data.size()){
+            data[length-1] = t;
+        }else{ 
+            data.push_back(t);
+            fix_up(length - 1);
+        }
+    }
+    void pop(){ //pop fn
+        swap(data[0], data[--length]);
+        fix_down(0);
+    }
+    const T& top(){ //top fn
+        return data[0];
+    }
+    const size_t size(){ //size fn
+        return length;
+    }
+    const bool empty(){ //check empty
+        if(length == 0){
+            return true;
+        }
+        return false;
+    }
+private:
+    vector<T> data;
+    int length;
+    bool greater(T& t1, T& t2){ //minheap comparator
+        return *(t1) < *(t2);
+    }
+    static int left(int i){ 
+        return 2*i + 1;
+    }
+    static int right(int i){ 
+        return 2*i + 2;
+    }
+    static int parent(int i){ 
+        return (i-1)/2;
+    }
+    void fix_up(int i){ //fix_up
+        for(int j = parent(i); (j>=0) && greater(data[j], data[i]); i=j,j=parent(i)){
+            swap(data[i], data[j]);
+        }
+    }
+    void fix_down(int i){ //fix_down
+        T tmp = data[i];
+        int j = left(i);
+
+        while (j < length) {
+            if(j+1 < length && greater(data[j], data[j+1])){
+                j++;
+            }
+            if (greater(tmp, data[j])) {
+                data[i] = data[j];
+                i = j;
+                j = left(i);
+            }else{
+                break;
+            }   
+        }
+        data[i] = tmp;
+    }
+};
+int32_t main(){
+    int n, m;
+    cin>>n>>m;
+    unordered_map<string, Node *>mp;
+    vector<Node *>vec;
+    for(int i=0;i<n;i++){ //creating graph
+        string a;
+        cin>>a;
+        Node * A = new Node(a);
+        mp[a] = A;
+        vec.push_back(A);
+    }
+    for(int i=0;i<m;i++){ //adding edges
+        string a, b;
+        int d;
+        cin>>a>>b>>d;
+        mp[a]->addadj(b, d);
+        mp[b]->addadj(a, d);
+    }
+    string c, d;
+    cin>>c>>d;
+    for(int i=0;i<n;i++){ //setting distance from src
+        if(vec[i]->getID() == c){
+            vec[i]->setdistsrc(0);
+            vec[i]->setedist(0);
+            vec[i]->setodist(INT_MAX);
+        }else{
+            vec[i]->setedist(INT_MAX);
+            vec[i]->setodist(INT_MAX);
+            vec[i]->setdistsrc(INT_MAX);
+        }
+    }
+    Genpq<Node *>pq;
+    pq.push(mp[c]);
+    while(!pq.empty()){ //dijkstra
+        string node = pq.top()->getID();
+        int dis = pq.top()->getdistsrc();
+        int odis = pq.top()->getodist();
+        int edis = pq.top()->getedist();
+        pq.pop();
+        for(auto it : (mp[node])->adj){
+            string v = it.first;
+            int w = it.second; 
+            if(odis + w < mp[v]->getedist()){
+                mp[v]->setedist(odis + w);
+                pq.push(mp[v]);
+            }
+            if(edis + w < mp[v]->getodist()){
+                mp[v]->setodist(edis + w);
+                pq.push(mp[v]);
+            }
+        }
+    }
+    if(mp[d]->getedist() == INT_MAX){
+        cout<<-1<<endl;
+    }else{
+        cout<<mp[d]->getedist()<<endl;
+    }
+}
