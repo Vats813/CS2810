@@ -12,3 +12,4 @@ The mapping of each file to their respective problem statement is given here:
 8) Harry Potter(Templates, Priority Queue impl, Dijkstra).cpp - [Harry Potter](https://docs.google.com/document/d/10OX3kaJ9XvOsgzzkE-COJ-sok0dS3LdBNLWhFSsyFEw/edit?tab=t.0)
 9) GeoSolitaire(Greedy, Longest Increasing Subsequence, OO gen).cpp - [GeoSolitaire](https://docs.google.com/document/d/16AOc2U8r0-XFHrcOnFp7zreH1QwFDT5Dca0-0QS_mfw/edit?tab=t.0)
 10) Ashoka(DP, Vertex cover, OO gen).cpp - [Ashoka](https://docs.google.com/document/d/1zbwYcH5_6Yq2umW7_HHaTVmCNf1NY3LOeuKQnIvrVLM/edit?tab=t.0)
+11) Fantastic Beasts(Bitmask DP).coo - [Fantastic Beasts](https://docs.google.com/document/d/1omUbOY8CqdERulROdcBbvPhfsDxZ3xypZxKrf1oubcE/edit?tab=t.0)
